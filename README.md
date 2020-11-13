@@ -1,2 +1,6 @@
 # NahBot
-A simple Discord Bot
+A simple Discord Bot for Nah Discord Server 
+
+Features:
+
+
