@@ -1,17 +1,16 @@
 package me.RaduCapatina.Bot;
 
-import me.RaduCapatina.Commands.AutoVoiceChannel.ChannelJoin;
-import me.RaduCapatina.Commands.AutoVoiceChannel.ChannelLeave;
-import me.RaduCapatina.Commands.AutoVoiceChannel.ChannelLock;
-import me.RaduCapatina.Commands.AutoVoiceChannel.ChannelUnlock;
+import Commands.Spam;
+import com.jagrosh.jdautilities.command.CommandClient;
+import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import me.RaduCapatina.Commands.AmongUs;
+import me.RaduCapatina.Commands.AutoVoiceChannel;
 import me.RaduCapatina.Commands.Owner;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.managers.Presence;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,9 +20,8 @@ import java.util.Vector;
 public class Bot {
 
     public static final String prefix = "~";    // this String stores the command prefix
-    public static boolean Setup = false;    //this var stores if the guild owner has initiated the welcome message commnand
-
     public static final String channelPrefix = "~~";
+    public static boolean Setup = false;    //this var stores if the guild owner has initiated the welcome message commnand
     public static Vector<Member> voiceAdminList = new Vector<Member>(1);
     /*      This bot has a system that auto-generates voice channels.
      *
@@ -46,22 +44,31 @@ public class Bot {
     public static void main(String args[]) throws Exception {
         JDA jda = JDABuilder.createDefault(readToken()).build();
 
+        //using JDA-Util
+        CommandClientBuilder builder = new CommandClientBuilder();
+        EventWaiter eventWaiter = new EventWaiter();
+
+        builder.setPrefix(prefix);
+        //builder.setHelpWord("help");
+        builder.setOwnerId("318102952168390656");
+        builder.setActivity(Activity.playing("~~help"));
+        builder.addCommand(new AmongUs(eventWaiter));
+
+        CommandClient client = builder.build();
+        jda.addEventListener(client);
+
+        //using normal jda
         jda.addEventListener(new Owner());
-        jda.addEventListener(new ChannelJoin());
-        jda.addEventListener(new ChannelLeave());
-        jda.addEventListener(new ChannelLock());
-        jda.addEventListener(new ChannelUnlock());
-        setRichPresence(jda);
+        jda.addEventListener(new AutoVoiceChannel());
+        jda.addEventListener(new Spam());
+//        jda.addEventListener(new Initializer());
+
     }
+
     private static String readToken() throws FileNotFoundException {
         //replace token file path
         File tokenFile = new File("C:\\Users\\Radu\\Desktop\\Java\\Discord Bot\\src\\main\\externalFiles\\token.txt");
         Scanner tokenScanner = new Scanner(tokenFile);
         return tokenScanner.nextLine();
-    }
-    private static void setRichPresence(@NotNull JDA jda) {
-        Presence presence = jda.getPresence();
-        presence.setActivity(Activity.playing("~help"));
-        presence.setStatus(OnlineStatus.ONLINE);
     }
 }
