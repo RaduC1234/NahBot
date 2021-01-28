@@ -1,4 +1,4 @@
-package me.RaduCapatina.Commands.au;
+package me.RaduCapatina.DeadCode;
 
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -87,8 +87,6 @@ public class Initializer extends ListenerAdapter {
                                     m.addReaction(":nah_au_blue:777956409996214293").queue();
                                     m.addReaction(":nah_au__black:777956410508050442").queue();
                                     m.addReaction("❌").queue();
-
-                                    EventWaiter eventWaiter = new EventWaiter();
                                 }
                             });
                         } else

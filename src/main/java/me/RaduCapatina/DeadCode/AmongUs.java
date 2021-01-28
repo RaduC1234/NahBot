@@ -1,26 +1,19 @@
-package me.RaduCapatina.Commands;
+package me.RaduCapatina.DeadCode;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.sharding.ShardManager;
-import net.dv8tion.jda.api.utils.cache.ShardCacheView;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
-import java.awt.image.SampleModel;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import static me.RaduCapatina.Commands.au.Initializer.players;
+import static me.RaduCapatina.DeadCode.Initializer.players;
 
 public class AmongUs extends Command {
     public boolean onGame = false;
@@ -35,7 +28,7 @@ public class AmongUs extends Command {
         this.name = "au";
         this.aliases = new String[]{"hi"};
         this.arguments = "<item> <item>";
-        this.help = "says hello and waits for a response";
+        //this.HelpCommand = "says hello and waits for a response";
     }
 
     @Override

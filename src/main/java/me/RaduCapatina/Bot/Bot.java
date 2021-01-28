@@ -1,12 +1,15 @@
 package me.RaduCapatina.Bot;
 
-import Commands.Spam;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import me.RaduCapatina.Commands.AmongUs;
-import me.RaduCapatina.Commands.AutoVoiceChannel;
-import me.RaduCapatina.Commands.Owner;
+import me.RaduCapatina.Commands.*;
+import me.RaduCapatina.DeadCode.AmongUs;
+import me.RaduCapatina.DeadCode.Initializer;
+import me.RaduCapatina.NahGuild.Owner;
+import me.RaduCapatina.Setup.JSONSetup;
+import me.RaduCapatina.Setup.SetupOOBE1;
+import me.RaduCapatina.Setup.SetupOOBE2;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -19,27 +22,11 @@ import java.util.Vector;
 
 public class Bot {
 
-    public static final String prefix = "~";    // this String stores the command prefix
-    public static final String channelPrefix = "~~";
-    public static boolean Setup = false;    //this var stores if the guild owner has initiated the welcome message commnand
+               
+    public static final String prefix = "~~"; // this String stores the command prefix
+    public static String externalFilesPath = ".\\src\\main\\externalFiles\\guildData\\";
     public static Vector<Member> voiceAdminList = new Vector<Member>(1);
-    /*      This bot has a system that auto-generates voice channels.
-     *
-     *      It works by checking if someone has joined the special channel, them it creates another voice channel and
-     * then it moves that user there. It also makes that User an "voiceAdmin" defined in voiceAdminList Vector.
-     *
-     *      If an admin Left the channel, the system picks an random user.
-     *      If the channel is empty, it will be deleted.
-     *
-     *      Commands: ~~kick (kicks the User without been able to rejoin)
-     *                ~~lock (locks the channel)
-     *                ~~unlock (unlocks the channel)
-     *
-     *      Special prefix: "~~"
-     *
-     *      If you want to use it for your own server be sure to replace the "Create Voice channel" channel
-     *  and the category that contains that channel.
-     */
+
 
     public static void main(String args[]) throws Exception {
         JDA jda = JDABuilder.createDefault(readToken()).build();
@@ -49,10 +36,12 @@ public class Bot {
         EventWaiter eventWaiter = new EventWaiter();
 
         builder.setPrefix(prefix);
-        //builder.setHelpWord("help");
+        builder.useHelpBuilder(false);
         builder.setOwnerId("318102952168390656");
         builder.setActivity(Activity.playing("~~help"));
-        builder.addCommand(new AmongUs(eventWaiter));
+        builder.addCommand(new SetupOOBE2(eventWaiter));
+        //builder.addCommand(new AmongUs(eventWaiter));
+
 
         CommandClient client = builder.build();
         jda.addEventListener(client);
@@ -60,14 +49,18 @@ public class Bot {
         //using normal jda
         jda.addEventListener(new Owner());
         jda.addEventListener(new AutoVoiceChannel());
-        jda.addEventListener(new Spam());
-//        jda.addEventListener(new Initializer());
+        jda.addEventListener(new Help());
+        jda.addEventListener(new JSONSetup());
+        jda.addEventListener(new UserInfo());
+        jda.addEventListener(new SetupOOBE1());
+        jda.addEventListener(new Shutdown());
+        //jda.addEventListener(new Initializer());
 
     }
 
     private static String readToken() throws FileNotFoundException {
         //replace token file path
-        File tokenFile = new File("C:\\Users\\Radu\\Desktop\\Java\\Discord Bot\\src\\main\\externalFiles\\token.txt");
+        File tokenFile = new File(".\\src\\main\\externalFiles\\token.txt");
         Scanner tokenScanner = new Scanner(tokenFile);
         return tokenScanner.nextLine();
     }

@@ -31,3 +31,7 @@ src/main/externalFiles/token.txt
 # Maven
 log/
 target/
+*.json
+*.MF
+NahBotAttemt01.png
+src/main/java/me/RaduCapatina/Templates/EmojiButton.java
