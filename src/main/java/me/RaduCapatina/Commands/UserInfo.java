@@ -35,7 +35,7 @@ public class UserInfo extends ListenerAdapter {
                                 "\u200E\u200F\u200F\u200E \u200E\u200F\u200F\u200E " +
                                 "\u200E\u200F\u200F\u200E\u200F\u200F\u200E  \u200E\u200F\u200F\u200E" +
                                 " \u200E\u200F\u200F\u200E \u200E\u200F\u200F\u200E \u200E\u200F\u200F\u200E" +
-                                "General Information", "**Name** " + mentionedMember.getEffectiveName() + "\n**Tag** #" + mentionedMember.getUser().getDiscriminator(), true)
+                                "General Information", "**Name** " + mentionedMember.getUser().getName() + "\n**Tag** #" + mentionedMember.getUser().getDiscriminator(), true)
                         .addField("‏‏‎ ‎", "**Nickname** " + getNickname(mentionedMember) + "\n**UserId** " + mentionedMember.getUser().getId(), true)
                         .addBlankField(false)
                         .addField("Joined Server ", getTimeRow1(mentionedMember), true)
@@ -58,6 +58,9 @@ public class UserInfo extends ListenerAdapter {
         String hour = Integer.toString(member.getTimeJoined().getHour());
         String minute = Integer.toString(member.getTimeJoined().getMinute());
 
+        if(minute.length() == 1)
+            minute = "0" + minute;
+
         return day + "-" + month + "-" + year + "\n" + hour + ":" + minute;
     }
     private String getTimeRow2(Member member){
@@ -67,9 +70,14 @@ public class UserInfo extends ListenerAdapter {
         String hour = Integer.toString(member.getTimeCreated().getHour());
         String minute = Integer.toString(member.getTimeCreated().getMinute());
 
+        if(minute.length() == 1)
+            minute = "0" + minute;
+
         return day + "-" + month + "-" + year + "\n" + hour + ":" + minute;
     }
     private String getRoleStatus(Member member){
+        if(member.isOwner())
+            return "Server Owner" + "\n Server Administrator";
         if(member.getPermissions().contains(Permission.ADMINISTRATOR))
             return "Server Administrator";
         return "Server Member";

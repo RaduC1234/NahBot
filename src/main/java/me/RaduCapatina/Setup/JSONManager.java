@@ -13,9 +13,7 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.List;
 
-public class JSONSetup extends ListenerAdapter {
-
-
+public class JSONManager extends ListenerAdapter {
     public static JsonRoles returnRoles(String serverId) {
         boolean usePublicRole = false;
         String accessRole = null;
@@ -74,6 +72,33 @@ public class JSONSetup extends ListenerAdapter {
         return new JSONChannel(categoryId, channelId);
     }
 
+    public static void setupAutoVoiceChannel(String serverId, JSONChannel jsonChannel) {
+        JSONParser jsonParser = new JSONParser();
+        try {
+            //Read JSON file
+            Object obj = jsonParser.parse(new FileReader(Bot.externalFilesPath + serverId + ".json"));
+
+            JSONObject jsonObject = (JSONObject) obj;
+
+            JSONObject channelSubSection = (JSONObject) jsonObject.get("voiceChannel");
+
+            channelSubSection.put("channel", jsonChannel.channelId);
+            channelSubSection.put("category", jsonChannel.categoryId);
+
+            try (Writer out = new FileWriter(Bot.externalFilesPath + serverId + ".json")) {
+                out.write(jsonObject.toJSONString());
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("[BOT Event-Manager] Error: Cannot open guild file in function setupAutoVoiceChannel");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onGuildJoin(@Nonnull GuildJoinEvent event) {
 
@@ -119,33 +144,6 @@ public class JSONSetup extends ListenerAdapter {
             } catch (Exception e) {
                 System.out.println("[JSON-Manager] Error: " + e.getMessage());
             }
-        }
-    }
-
-    public static void setupAutoVoiceChannel(String serverId, JSONChannel jsonChannel) {
-        JSONParser jsonParser = new JSONParser();
-        try {
-            //Read JSON file
-            Object obj = jsonParser.parse(new FileReader(Bot.externalFilesPath + serverId + ".json"));
-
-            JSONObject jsonObject = (JSONObject) obj;
-
-            JSONObject channelSubSection = (JSONObject) jsonObject.get("voiceChannel");
-
-            channelSubSection.put("channel", jsonChannel.channelId);
-            channelSubSection.put("category", jsonChannel.categoryId);
-
-            try (Writer out = new FileWriter(Bot.externalFilesPath + serverId + ".json")) {
-                out.write(jsonObject.toJSONString());
-            }
-
-        } catch (FileNotFoundException e) {
-            System.out.println("[BOT Event-Manager] Error: Cannot open guild file in function setupAutoVoiceChannel");
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
     }
 

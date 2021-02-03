@@ -3,11 +3,12 @@ package me.RaduCapatina.Bot;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import me.RaduCapatina.Commands.*;
-import me.RaduCapatina.DeadCode.AmongUs;
-import me.RaduCapatina.DeadCode.Initializer;
+import me.RaduCapatina.Commands.AutoVoiceChannel;
+import me.RaduCapatina.Commands.Help;
+import me.RaduCapatina.Commands.UserInfo;
+import me.RaduCapatina.Haha;
 import me.RaduCapatina.NahGuild.Owner;
-import me.RaduCapatina.Setup.JSONSetup;
+import me.RaduCapatina.Setup.JSONManager;
 import me.RaduCapatina.Setup.SetupOOBE1;
 import me.RaduCapatina.Setup.SetupOOBE2;
 import net.dv8tion.jda.api.JDA;
@@ -28,8 +29,9 @@ public class Bot {
     public static Vector<Member> voiceAdminList = new Vector<Member>(1);
 
 
-    public static void main(String args[]) throws Exception {
-        JDA jda = JDABuilder.createDefault(readToken()).build();
+    public static void main(String[] args) throws Exception {
+
+        JDA jda = JDABuilder.createDefault(readToken())/*.enableIntents(GatewayIntent.GUILD_MEMBERS)*/.build();
 
         //using JDA-Util
         CommandClientBuilder builder = new CommandClientBuilder();
@@ -39,22 +41,27 @@ public class Bot {
         builder.useHelpBuilder(false);
         builder.setOwnerId("318102952168390656");
         builder.setActivity(Activity.playing("~~help"));
+
+        //JDA-Util Commands
         builder.addCommand(new SetupOOBE2(eventWaiter));
-        //builder.addCommand(new AmongUs(eventWaiter));
+       // builder.addCommand(new AmongUs(eventWaiter));
 
 
         CommandClient client = builder.build();
         jda.addEventListener(client);
+        jda.addEventListener(eventWaiter);
 
         //using normal jda
         jda.addEventListener(new Owner());
         jda.addEventListener(new AutoVoiceChannel());
         jda.addEventListener(new Help());
-        jda.addEventListener(new JSONSetup());
+        jda.addEventListener(new JSONManager());
         jda.addEventListener(new UserInfo());
         jda.addEventListener(new SetupOOBE1());
         jda.addEventListener(new Shutdown());
-        //jda.addEventListener(new Initializer());
+        jda .addEventListener(new Haha());
+        //jda.addEventListener(new Initializer(eventWaiter));
+
 
     }
 

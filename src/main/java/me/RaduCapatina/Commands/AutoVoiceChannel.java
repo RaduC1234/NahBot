@@ -1,7 +1,7 @@
 package me.RaduCapatina.Commands;
 
 import me.RaduCapatina.Bot.Bot;
-import me.RaduCapatina.Setup.JSONSetup;
+import me.RaduCapatina.Setup.JSONManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -17,8 +17,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 
 public class AutoVoiceChannel extends ListenerAdapter {
-
-
 
     /*      This bot has a system that auto-generates voice channels.
      *
@@ -40,12 +38,12 @@ public class AutoVoiceChannel extends ListenerAdapter {
      */
 
     private static String returnChannelId(GenericGuildVoiceEvent event) { // returns the channelID from guild.json
-        JSONSetup.JSONChannel id = JSONSetup.returnVoiceChannel(event.getGuild().getId());
+        JSONManager.JSONChannel id = JSONManager.returnVoiceChannel(event.getGuild().getId());
         return id.getChannelId();
     }
 
     private static String returnCategoryId(GenericGuildVoiceEvent event) { // returns the categoryID from guild.json
-        JSONSetup.JSONChannel id = JSONSetup.returnVoiceChannel(event.getGuild().getId());
+        JSONManager.JSONChannel id = JSONManager.returnVoiceChannel(event.getGuild().getId());
         return id.getCategoryId();
     }
 
@@ -53,7 +51,7 @@ public class AutoVoiceChannel extends ListenerAdapter {
         // this modifies the visibility for all guild roles except ones included in guild.json.
         // allow = 1 -> allow to see
         // allow = 0 -> deny to see
-        JSONSetup.JsonRoles roles = JSONSetup.returnRoles(event.getGuild().getId());
+        JSONManager.JsonRoles roles = JSONManager.returnRoles(event.getGuild().getId());
 
         if (!allow) {
             try {
@@ -61,7 +59,7 @@ public class AutoVoiceChannel extends ListenerAdapter {
                     voiceChannel.putPermissionOverride(event.getGuild().getRoleById(roles.getAccessRole())).deny(Permission.VOICE_CONNECT).queue();
                 }
             } catch (NullPointerException e) {
-                event.getChannel().sendMessage("Error: cannot lock your channel because the guild file is absent.\nIf this error persists please contact a moderator");
+                event.getChannel().sendMessage("Error: cannot lock your channel because the guild file is absent.\nIf this error persists please contact a moderator").queue();
             }
 
             voiceChannel.putPermissionOverride(event.getGuild().getPublicRole()).deny(Permission.VOICE_CONNECT).queue();
@@ -71,7 +69,7 @@ public class AutoVoiceChannel extends ListenerAdapter {
                     voiceChannel.putPermissionOverride(event.getGuild().getRoleById(roles.getAccessRole())).setAllow(Permission.VOICE_CONNECT).queue();
                 }
             } catch (NullPointerException e) {
-                event.getChannel().sendMessage("Error: cannot unlock your channel because the guild file is absent.\nIf this error persists please contact a moderator");
+                event.getChannel().sendMessage("Error: cannot unlock your channel because the guild file is absent.\nIf this error persists please contact a moderator").queue();
             }
             voiceChannel.putPermissionOverride(event.getGuild().getPublicRole()).setAllow(Permission.VOICE_CONNECT).queue();
         }
@@ -202,7 +200,6 @@ public class AutoVoiceChannel extends ListenerAdapter {
                 && !event.getChannelLeft().equals(event.getGuild().getVoiceChannelById(returnChannelId(event)))
                 && event.getChannelLeft().getParent().equals(event.getGuild().getCategoryById(returnCategoryId(event)))) {
             Guild guild = event.getGuild();
-            VoiceChannel vc = event.getChannelLeft();
             guild.getVoiceChannelById(event.getChannelLeft().getId()).delete().reason("No members in channel").queue();
             if (Bot.voiceAdminList.contains(event.getMember()))
                 Bot.voiceAdminList.remove(event.getMember());
@@ -212,8 +209,7 @@ public class AutoVoiceChannel extends ListenerAdapter {
     //Channel Leave
     @Override
     public void onGuildVoiceLeave(@Nonnull GuildVoiceLeaveEvent event) {
-        try
-        {
+        try {
             if (event.getGuild().getCategoryById(returnCategoryId(event)).equals(event.getChannelLeft().getParent())) {
 
                 if (Bot.voiceAdminList.contains(event.getMember())
@@ -227,9 +223,10 @@ public class AutoVoiceChannel extends ListenerAdapter {
                     guild.getVoiceChannelById(event.getChannelLeft().getId()).delete().reason("No members in channel").queue();
                 }
             }
-        }
-        catch (NullPointerException ignored)
-        {
+        } catch (NullPointerException ignored) {
+            // do nothing
+        } catch (Exception e) {
+            System.out.println("[Bot-Error] Unexpected error: " + e.getMessage());
         }
     }
 }
