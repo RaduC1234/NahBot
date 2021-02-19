@@ -1,10 +1,7 @@
 package me.RaduCapatina;
 
 import me.RaduCapatina.Bot.Bot;
-import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
-import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -33,12 +30,12 @@ public class Haha extends ListenerAdapter {
             event.getMessage().delete().complete();
         }
 
-        /*if(message[0].equalsIgnoreCase(Bot.prefix + "changeName")){
+        if(message[0].equalsIgnoreCase(Bot.prefix + "changeName")){
             event.getMessage().delete().complete();
             Member member = event.getMessage().getMentionedMembers().get(0);
 
             member.modifyNickname(message[1]).complete();
-        }*/
+        }
     }
 
     @Override
@@ -57,7 +54,7 @@ public class Haha extends ListenerAdapter {
 
     }
     public static String returnMessage(){
-        return "<@706238634923261975> cine schimba numele la boti sau lui <@299974063432925185> e gay. \n" +
+        return " <@706238634923261975> cine schimba numele la boti sau lui <@647817525937045524> e gay. \n" +
                 "**Nu sterge mesajul asta sau o sa enervezi pe toata lumea .**\n" +
                 "Actiunea este automata deci o faci pe propria raspundere.";
     }

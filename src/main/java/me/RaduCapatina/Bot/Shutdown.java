@@ -1,5 +1,7 @@
 package me.RaduCapatina.Bot;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -14,6 +16,11 @@ public class Shutdown extends ListenerAdapter {
         {
           event.getMessage().addReaction("\uD83D\uDC98").queue();
           System.out.println("Shutdown");
+          for(Guild guild : event.getJDA().getGuilds()){
+
+                  event.getGuild().getAudioManager().closeAudioConnection();
+          }
+          //event.getGuild().getAudioManager().closeAudioConnection();
           event.getJDA().shutdown();
         }
     }

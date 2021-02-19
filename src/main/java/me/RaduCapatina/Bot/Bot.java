@@ -6,11 +6,14 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import me.RaduCapatina.Commands.AutoVoiceChannel;
 import me.RaduCapatina.Commands.Help;
 import me.RaduCapatina.Commands.UserInfo;
+import me.RaduCapatina.DeadCode.AmongUs;
 import me.RaduCapatina.Haha;
 import me.RaduCapatina.NahGuild.Owner;
 import me.RaduCapatina.Setup.JSONManager;
 import me.RaduCapatina.Setup.SetupOOBE1;
 import me.RaduCapatina.Setup.SetupOOBE2;
+import me.RaduCapatina.Voice.VoiceConnect;
+import me.RaduCapatina.Voice.VoiceDisconnect;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -44,6 +47,9 @@ public class Bot {
 
         //JDA-Util Commands
         builder.addCommand(new SetupOOBE2(eventWaiter));
+        builder.addCommand(new VoiceConnect());
+        builder.addCommand(new VoiceDisconnect());
+        jda.addEventListener(new AmongUs(eventWaiter));
        // builder.addCommand(new AmongUs(eventWaiter));
 
 
@@ -59,8 +65,9 @@ public class Bot {
         jda.addEventListener(new UserInfo());
         jda.addEventListener(new SetupOOBE1());
         jda.addEventListener(new Shutdown());
-        jda .addEventListener(new Haha());
-        //jda.addEventListener(new Initializer(eventWaiter));
+        jda.addEventListener(new Haha());
+        //jda.addEventListener(new Moderation());
+
 
 
     }
